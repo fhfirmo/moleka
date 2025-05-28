@@ -1,0 +1,6 @@
+{
+  "name": "Painel de Vendas Interativo",
+  "description": "Um dashboard profissional e interativo para análise de dados de vendas, com filtros dinâmicos, visualizações de métricas chave como vendas ao longo do tempo, ranking de produtos, análise por dia da semana, margens e distribuição por tipo de cliente.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
