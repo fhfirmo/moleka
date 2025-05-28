@@ -93,9 +93,10 @@ const DistributionPieChart: React.FC<DistributionPieChartProps> = ({
           contentStyle={{ backgroundColor: tooltipBgColor, border: 'none', borderRadius: '0.5rem', color: tooltipLabelColor }}
           labelStyle={{ color: tooltipLabelColor, fontWeight: 'bold' }}
           itemStyle={{ color: legendColor }}
-          formatter={(value: number, name: string) // name is the groupKey value
-            => [`${valuePrefix}${value.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}${valueSuffix} (${(value / totalValue * 100).toFixed(1)}%)`, name]}
-        />
+formatter={(value: number, name: string) => [
+  `<span class="math-inline">\{valuePrefix\}</span>{value.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}<span class="math-inline">\{valueSuffix\} \(</span>{(value / totalValue * 100).toFixed(1)}%)`,
+  name
+]}/>
         <Legend 
           content={<CustomLegend theme={theme} />} // Pass theme to CustomLegend
           layout="horizontal" 
