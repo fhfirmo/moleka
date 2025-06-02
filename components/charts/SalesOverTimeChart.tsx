@@ -1,8 +1,8 @@
 
 import React, { useState, useMemo } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceArea } from 'recharts';
-import { SaleItem, TimeSeriesData, Theme, AggregationPeriod } from '../../types';
-import { processSalesOverTime, formatDateForChartAxis, CHART_COLORS } from '../../utils/chartUtils';
+import { SaleItem, TimeSeriesData, Theme, AggregationPeriod } from '../../types.ts';
+import { processSalesOverTime, formatDateForChartAxis, CHART_COLORS } from '../../utils/chartUtils.ts';
 import { ptBR } from 'date-fns/locale';
 
 interface SalesOverTimeChartProps {
@@ -102,8 +102,8 @@ const SalesOverTimeChart: React.FC<SalesOverTimeChartProps> = ({ data, theme }) 
 
   const aggregationPeriodConfig: Record<AggregationPeriod, { name: string; icon?: React.FC<React.SVGProps<SVGSVGElement>>, btnColor: string }> = {
     day: { name: 'Dia', icon: CalendarDaysIcon, btnColor: 'cyan' },
-    week: { name: 'Semana', icon: undefined, btnColor: 'sky' }, // Using text for now
-    'bi-week': { name: 'Quinzena', icon: undefined, btnColor: 'indigo'}, // Using text for now
+    week: { name: 'Semana', icon: undefined, btnColor: 'sky' },
+    'bi-week': { name: 'Quinzena', icon: undefined, btnColor: 'indigo' },
     month: { name: 'Mês', icon: CalendarIcon, btnColor: 'violet' },
   };
   
@@ -139,7 +139,7 @@ const SalesOverTimeChart: React.FC<SalesOverTimeChartProps> = ({ data, theme }) 
     margin: { top: 5, right: 20, left: 20, bottom: 20 },
     onMouseDown: (e: any) => e && setZoomArea(prev => ({ ...prev, refAreaLeft: e.activeLabel })), // activeLabel is the dataKey of XAxis
     onMouseMove: (e: any) => e && zoomArea.refAreaLeft && setZoomArea(prev => ({ ...prev, refAreaRight: e.activeLabel })),
-    onMouseUp: handleZoom,
+    onMouseUp: handleZoom
   };
 
   return (

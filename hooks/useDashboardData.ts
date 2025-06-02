@@ -1,7 +1,8 @@
+
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { SaleItem, ExpenseItem, Filters, Season, MonthKey } from '../types';
-import { loadDashboardDataFromExcel } from '../utils/excelUtils'; // Updated import
-import { getBrazilianSeason } from '../utils/dateUtils'; 
+import { SaleItem, ExpenseItem, Filters, Season, MonthKey } from '../types.ts';
+import { loadDashboardDataFromExcel } from '../utils/excelUtils.ts'; 
+import { getBrazilianSeason } from '../utils/dateUtils.ts'; 
 
 const INITIAL_FILTER_STATE: Filters = {
   clientTypes: [],
@@ -9,15 +10,16 @@ const INITIAL_FILTER_STATE: Filters = {
   flavors: [],
   seasons: [],
   months: [], 
+  years: [], // Added for year filter
   startDate: undefined,
   endDate: undefined,
 };
 
 const EXCEL_FILE_PATH = '/Dados/dados_moleka_2022.xlsx';
 
-export const useDashboardData = () => { // Renamed hook
+export const useDashboardData = () => { 
   const [allSalesData, setAllSalesData] = useState<SaleItem[]>([]);
-  const [allExpenseData, setAllExpenseData] = useState<ExpenseItem[]>([]); // New state for expenses
+  const [allExpenseData, setAllExpenseData] = useState<ExpenseItem[]>([]); 
   const [filters, setFilters] = useState<Filters>(INITIAL_FILTER_STATE);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +30,7 @@ export const useDashboardData = () => { // Renamed hook
       setError(null);
       try {
         console.log(`Tentando carregar dados de: ${EXCEL_FILE_PATH}`);
-        const { salesData, expenseData } = await loadDashboardDataFromExcel(EXCEL_FILE_PATH); // Updated function call
+        const { salesData, expenseData } = await loadDashboardDataFromExcel(EXCEL_FILE_PATH); 
         
         console.log(`Dados de vendas carregados: ${salesData.length} itens.`);
         console.log(`Dados de despesas carregados: ${expenseData.length} itens.`);
@@ -36,7 +38,6 @@ export const useDashboardData = () => { // Renamed hook
         const sortedSalesData = salesData.sort((a,b) => a.saleDate.getTime() - b.saleDate.getTime());
         setAllSalesData(sortedSalesData);
         
-        // Expenses might also be sorted by date if needed for future charts
         const sortedExpenseData = expenseData.sort((a,b) => a.purchaseDate.getTime() - b.purchaseDate.getTime());
         setAllExpenseData(sortedExpenseData);
 
@@ -71,19 +72,31 @@ export const useDashboardData = () => { // Renamed hook
     return Array.from(flavorsSet).sort();
   }, [allSalesData, isLoading, error]);
 
+  const uniqueYears = useMemo(() => {
+    if (isLoading || error) return [];
+    const yearsSet = new Set(allSalesData.map(item => item.saleDate.getFullYear().toString()).filter(Boolean));
+    // Consider adding years from expenseData if filters apply to both dashboards with the same year filter
+    // allExpenseData.forEach(item => yearsSet.add(item.purchaseDate.getFullYear().toString()));
+    return Array.from(yearsSet).sort((a,b) => parseInt(b) - parseInt(a)); // Sort descending
+  }, [allSalesData, isLoading, error]);
+
   const filteredSalesData = useMemo(() => {
     if (isLoading || error || !allSalesData.length) return [];
 
     return allSalesData.filter(item => {
-      const saleDate = new Date(item.saleDate);
-      const saleDateForDayComparison = new Date(item.saleDate);
-      saleDateForDayComparison.setHours(0, 0, 0, 0);
+      const saleDate = item.saleDate; 
 
       const startDateFilter = filters.startDate ? new Date(filters.startDate + 'T00:00:00') : null;
-      const endDateFilter = filters.endDate ? new Date(filters.endDate + 'T23:59:59') : null;
       
-      if (startDateFilter && saleDateForDayComparison < startDateFilter) return false;
-      if (endDateFilter && saleDateForDayComparison > endDateFilter) return false;
+      let endDateFilterExclusive = null;
+      if (filters.endDate) {
+          const tempEndDate = new Date(filters.endDate + 'T00:00:00');
+          tempEndDate.setDate(tempEndDate.getDate() + 1);
+          endDateFilterExclusive = tempEndDate;
+      }
+      
+      if (startDateFilter && saleDate < startDateFilter) return false;
+      if (endDateFilterExclusive && saleDate >= endDateFilterExclusive) return false;
       
       if (filters.seasons.length > 0) {
         const itemSeason = getBrazilianSeason(saleDate);
@@ -93,6 +106,11 @@ export const useDashboardData = () => { // Renamed hook
       if (filters.months.length > 0) {
         const itemMonthKey = saleDate.getMonth().toString() as MonthKey;
         if (!filters.months.includes(itemMonthKey)) return false;
+      }
+
+      if (filters.years.length > 0) {
+        const itemYear = saleDate.getFullYear().toString();
+        if (!filters.years.includes(itemYear)) return false;
       }
       
       if (filters.clientTypes.length > 0 && !filters.clientTypes.includes(item.clientType)) return false;
@@ -110,13 +128,14 @@ export const useDashboardData = () => { // Renamed hook
     isLoading,
     error,
     allSalesData,
-    allExpenseData, // Provide expense data
+    allExpenseData, 
     filters,
     setFilters,
     filteredSalesData,
     uniqueClientTypes,
     uniqueProductNames,
     uniqueFlavors,
+    uniqueYears, // Added
     resetFilters,
   };
 };

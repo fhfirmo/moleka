@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moleka Sorvetes - A Maravilhosa Fábrica de Sabores Artesanais</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background-color: #FFFFFF;
+            color: #333333;
+        }
+        
+        .bg-primary {
+            background-color: #EC008C;
+        }
+        
+        .bg-secondary {
+            background-color: #FFB300;
+        }
+        
+        .bg-accent1 {
+            background-color: #00AEEF;
+        }
+        
+        .bg-accent2 {
+            background-color: #8CC63F;
+        }
+        
+        .text-primary {
+            color: #EC008C;
+        }
+        
+        .text-secondary {
+            color: #FFB300;
+        }
+        
+        .text-accent1 {
+            color: #00AEEF;
+        }
+        
+        .text-accent2 {
+            color: #8CC63F;
+        }
+        
+        .btn-primary {
+            background-color: #EC008C;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #d0007d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(236, 0, 140, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #FFB300;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e6a100;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(255, 179, 0, 0.3);
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .fade-in.appear {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .product-card {
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: scale(1.02);
+        }
+        
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #EC008C;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, #EC008C, #FFB300, #00AEEF, #8CC63F);
+            margin: 2rem auto;
+            width: 80%;
+            border-radius: 2px;
+        }
+        
+        /* Carousel para testimonials */
+        .testimonial-container {
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .testimonial-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        .testimonial-slide {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* Paralax effect for hero section */
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header/Navbar -->
+    <header class="fixed w-full z-50 navbar shadow-md">
+        <div class="container mx-auto py-3 px-4 flex justify-between items-center">
+            <!-- Logo Placeholder -->
+            <div class="flex items-center">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-secondary to-primary flex items-center justify-center text-white font-bold text-xl">
+                    MS
+                </div>
+                <span class="ml-3 text-xl font-bold text-primary">Moleka Sorvetes</span>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                <i class="fas fa-bars text-2xl text-primary"></i>
+            </button>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-link font-medium">Home</a>
+                <a href="#quem-somos" class="nav-link font-medium">Quem Somos</a>
+                <a href="#nossos-produtos" class="nav-link font-medium">Nossos Produtos</a>
+                <a href="#onde-encontrar" class="nav-link font-medium">Onde Nos Encontrar</a>
+                <a href="#depoimentos" class="nav-link font-medium">O que Nossos Clientes Dizem</a>
+            </nav>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-md">
+            <nav class="container mx-auto py-4 px-6 flex flex-col space-y-4">
+                <a href="#home" class="py-2 nav-link font-medium">Home</a>
+                <a href="#quem-somos" class="py-2 nav-link font-medium">Quem Somos</a>
+                <a href="#nossos-produtos" class="py-2 nav-link font-medium">Nossos Produtos</a>
+                <a href="#onde-encontrar" class="py-2 nav-link font-medium">Onde Nos Encontrar</a>
+                <a href="#depoimentos" class="py-2 nav-link font-medium">O que Nossos Clientes Dizem</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="pt-24 pb-12 md:pt-32 md:pb-20 bg-gradient-to-b from-white to-pink-50">
+        <div class="container mx-auto px-4 flex flex-col-reverse md:flex-row items-center">
+            <div class="md:w-1/2 fade-in">
+                <h1 class="text-3xl md:text-5xl font-bold mb-6 text-primary">
+                    Moleka Sorvetes: A Maravilhosa Fábrica de Sabores Artesanais
+                </h1>
+                <p class="text-lg md:text-xl mb-8">
+                    Bem-vindo à Moleka Sorvetes! Somos uma empresa brasileira de sorvetes, reconhecida por nosso foco em ingredientes naturais e produção artesanal.
+                </p>
+                <a href="#nossos-produtos" class="btn-primary py-3 px-8 rounded-lg text-lg font-medium inline-block">
+                    Explore Nossos Sabores
+                </a>
+            </div>
+            <div class="md:w-1/2 p-6 fade-in">
+                <img src="https://s2.glbimg.com/XrR-9Qvzj8gBr-z_f4jhwCWe31g=/e.glbimg.com/og/ed/f/original/2021/09/22/sorveteria_do_centro.jpg" 
+                     alt="Diversos sorvetes coloridos" 
+                     class="rounded-xl shadow-lg w-full h-auto object-cover transform hover:rotate-1 transition-transform duration-300">
+            </div>
+        </div>
+        
+        <div class="container mx-auto px-4 mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-xl shadow-md fade-in flex flex-col items-center text-center">
+                <div class="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center mb-4">
+                    <i class="fas fa-ice-cream text-2xl text-primary"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Artesanal & Natural</h3>
+                <p>Fabricamos nossos sorvetes de forma artesanal, usando ingredientes naturais selecionados.</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-md fade-in flex flex-col items-center text-center">
+                <div class="w-16 h-16 rounded-full bg-yellow-100 flex items-center justify-center mb-4">
+                    <i class="fas fa-medal text-2xl text-secondary"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Qualidade Garantida</h3>
+                <p>Mais de 20 anos de experiência e tradição na produção de sorvetes de alta qualidade.</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-md fade-in flex flex-col items-center text-center">
+                <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                    <i class="fas fa-utensils text-2xl text-accent1"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Variedade de Sabores</h3>
+                <p>Mais de 28 sabores diferentes para atender a todos os gostos e preferências.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Quem Somos Section -->
+    <section id="quem-somos" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center text-primary fade-in">Quem Somos</h2>
+            
+            <div class="flex flex-col md:flex-row items-center mb-16">
+                <div class="md:w-1/2 pr-0 md:pr-8 mb-8 md:mb-0 fade-in">
+                    <h3 class="text-2xl font-semibold mb-4 text-secondary">Nossa História</h3>
+                    <p class="mb-4">
+                        Nossa história começou há mais de 20 anos na cidade de Nilópolis, no Rio de Janeiro. 
+                        A produção teve início de forma artesanal, pelas mãos de mestres que combinavam leite 
+                        e frutas para criar delícias únicas.
+                    </p>
+                    <p>
+                        Em pouco tempo, nossos produtos conquistaram o paladar das pessoas, ganhando fama e 
+                        reconhecimento em toda a região.
+                    </p>
+                </div>
+                <div class="md:w-1/2 fade-in">
+                    <img src="https://alphagel.com.br/wp-content/uploads/2017/11/Producao-de-sorvete-artesanal-4-dicas-que-voce-precisa-saber-scaled.jpg" 
+                         alt="Fabricação de sorvete artesanal" 
+                         class="rounded-xl shadow-lg w-full h-auto object-cover">
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row-reverse items-center mb-16">
+                <div class="md:w-1/2 pl-0 md:pl-8 mb-8 md:mb-0 fade-in">
+                    <h3 class="text-2xl font-semibold mb-4 text-accent1">Nosso Fundador</h3>
+                    <p class="mb-4">
+                        Nosso fundador, Pedro Sartori, foi reconhecido por sua contribuição para o desenvolvimento 
+                        do município de Nilópolis, recebendo o Título de Cidadão Honorário de Nilópolis em uma 
+                        cerimônia realizada em nossa sede no bairro Olinda.
+                    </p>
+                    <p>
+                        O vereador Álvaro Cunha Ramos, o Alvinho, destacou a importância da Moleka Sorvetes por 
+                        gerar inúmeros empregos na cidade e ser um sucesso em nível estadual, representando um 
+                        orgulho para Nilópolis. Esta honraria foi concedida pela primeira vez a Pedro Sartori em 2022, 
+                        em reconhecimento à sua dedicação como empresário e ser humano. Ele é, de maneira inequívoca, 
+                        um cidadão nilopolitano.
+                    </p>
+                </div>
+                <div class="md:w-1/2 fade-in">
+                    <img src="https://cdn.diariodolitoral.com.br/img/pc/920/610/dn_arquivo/2025/02/sorveteria-royal-santos.jpg" 
+                         alt="Fábrica de sorvetes" 
+                         class="rounded-xl shadow-lg w-full h-auto object-cover">
+                </div>
+            </div>
+            
+            <div class="bg-gray-50 p-8 rounded-xl shadow-md fade-in">
+                <h3 class="text-2xl font-semibold mb-4 text-accent2 text-center">Valores e Diferenciais</h3>
+                <p class="mb-6">
+                    A Moleka Sorvetes destaca-se por sua proposta artesanal e natural, utilizando ingredientes 
+                    de qualidade selecionados. A busca pela melhoria constante é nosso compromisso com todos que nos cercam. 
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-check-circle text-accent2 mr-3"></i>
+                            <h4 class="font-semibold">Equipe Qualificada</h4>
+                        </div>
+                        <p>
+                            Temos uma força de trabalho atenta às tendências e necessidades dos mercados, aliada à 
+                            flexibilidade para adaptar-se às necessidades dos clientes.
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-check-circle text-accent2 mr-3"></i>
+                            <h4 class="font-semibold">Competências Principais</h4>
+                        </div>
+                        <p>
+                            Nossas principais competências são a concepção, promoção e distribuição de produtos de 
+                            qualidade a preços competitivos.
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-check-circle text-accent2 mr-3"></i>
+                            <h4 class="font-semibold">Qualidade Consistente</h4>
+                        </div>
+                        <p>
+                            A qualidade e a constância dos nossos produtos ao longo do tempo são vertentes essenciais 
+                            na satisfação de nossos clientes.
+                        </p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-check-circle text-accent2 mr-3"></i>
+                            <h4 class="font-semibold">Inovação Constante</h4>
+                        </div>
+                        <p>
+                            Estamos sempre em busca de novos sabores e combinações para surpreender e encantar 
+                            nossos clientes a cada visita.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Nossos Produtos Section -->
+    <section id="nossos-produtos" class="py-16 bg-pink-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 text-center text-primary fade-in">Nossos Produtos</h2>
+            <p class="text-lg text-center mb-12 max-w-3xl mx-auto fade-in">
+                Oferecemos diversão para toda a família com nossos deliciosos e refrescantes sabores. 
+                Contamos com uma grande variedade de produtos, com mais de 28 sabores diferentes.
+            </p>
+            
+            <!-- Tabs para categorias de produtos -->
+            <div class="mb-10 fade-in">
+                <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8">
+                    <button class="product-tab-btn active py-2 px-4 md:px-6 rounded-full bg-primary text-white font-medium" data-target="sorvetes">
+                        Sorvetes
+                    </button>
+                    <button class="product-tab-btn py-2 px-4 md:px-6 rounded-full bg-gray-200 text-gray-700 font-medium" data-target="picoles">
+                        Picolés
+                    </button>
+                    <button class="product-tab-btn py-2 px-4 md:px-6 rounded-full bg-gray-200 text-gray-700 font-medium" data-target="acai">
+                        Açaí
+                    </button>
+                    <button class="product-tab-btn py-2 px-4 md:px-6 rounded-full bg-gray-200 text-gray-700 font-medium" data-target="outros">
+                        Outros Itens
+                    </button>
+                </div>
+                
+                <!-- Sorvetes -->
+                <div id="sorvetes" class="product-tab-content block">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="product-card bg-white rounded-xl overflow-hidden shadow-md">
+                            <img src="https://previews.123rf.com/images/studioaccendo/studioaccendo2309/studioaccendo230927418/213147976-bolas-coloridas-de-sorvete-de-diferentes-cores-e-sabores-em-copos-pl%C3%A1sticos.jpg" 
+                                 alt="Sorvetes diversos" 
+                                 class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-2">Sorvetes em Pote</h3>
+                                <p class="mb-3">
+                                    Disponíveis em diversos tamanhos: 110ml, 250ml, 460ml, 1 litro, 2 litros e embalagem especial de 5 litros para sorveterias.
+                                </p>
+                                <p class="font-medium text-accent1">Sabores Populares:</p>
+                                <ul class="mt-2 grid grid-cols-2 gap-x-2 gap-y-1">
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Flocos</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Morango</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Creme</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Coco</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Chocolate</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Passas</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Pavê</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Napolitano</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card bg-white rounded-xl overflow-hidden shadow-md">
+                            <img src="https://gasparettosorvetes.com.br/wp-content/uploads/2020/05/potes-150ml-gasparetto.png" 
+                                 alt="Sorvetes em potes" 
+                                 class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-2">Sorvetes Premium</h3>
+                                <p class="mb-3">
+                                    Nossa linha premium traz combinações exclusivas de sabores para os paladares mais exigentes.
+                                </p>
+                                <p class="font-medium text-accent1">Diferenciais:</p>
+                                <ul class="mt-2">
+                                    <li class="flex items-center mb-2">
+                                        <i class="fas fa-check text-accent2 mr-2"></i>
+                                        <span>Ingredientes selecionados</span>
+                                    </li>
+                                    <li class="flex items-center mb-2">
+                                        <i class="fas fa-check text-accent2 mr-2"></i>
+                                        <span>Baixo teor de açúcar</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-check text-accent2 mr-2"></i>
+                                        <span>Opções sem lactose</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card bg-white rounded-xl overflow-hidden shadow-md">
+                            <img src="https://fabricadesorvete.com.br/wp-content/uploads/2022/09/Fabrica-de-Sorvete-Sorvete-de-Napolitano-Pote-de-1L-800-%C3%97-600-px.png" 
+                                 alt="Sorvete napolitano" 
+                                 class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-2">Sorvete Familiar</h3>
+                                <p class="mb-3">
+                                    Potes maiores ideais para família! Leve para casa e garanta esse sabor para todos.
+                                </p>
+                                <p class="font-medium text-accent1">Tamanhos Disponíveis:</p>
+                                <div class="mt-2 grid grid-cols-3 gap-2">
+                                    <span class="bg-pink-100 text-primary text-center py-1 px-2 rounded-md">1 Litro</span>
+                                    <span class="bg-pink-100 text-primary text-center py-1 px-2 rounded-md">2 Litros</span>
+                                    <span class="bg-pink-100 text-primary text-center py-1 px-2 rounded-md">5 Litros</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Picolés -->
+                <div id="picoles" class="product-tab-content hidden">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="product-card bg-white rounded-xl overflow-hidden shadow-md">
+                            <img src="https://polosulsc.com.br/wp-content/webp-express/webp-images/uploads/2018/06/Picol%C3%A9-de-frutas-vermelhas-1.jpg.webp" 
+                                 alt="Picolés de frutas" 
+                                 class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-2">Picolés de Frutas</h3>
+                                <p class="mb-3">
+                                    Refrescantes e saborosos, nossos picolés de frutas são feitos com polpa natural.
+                                </p>
+                                <p class="font-medium text-accent1">Sabores Disponíveis:</p>
+                                <div class="mt-2 flex flex-wrap gap-2">
+                                    <span class="bg-yellow-100 text-secondary py-1 px-3 rounded-full text-sm">Maracujá</span>
+                                    <span class="bg-yellow-100 text-secondary py-1 px-3 rounded-full text-sm">Manga</span>
+                                    <span class="bg-yellow-100 text-secondary py-1 px-3 rounded-full text-sm">Acerola</span>
+                                    <span class="bg-yellow-100 text-secondary py-1 px-3 rounded-full text-sm">Abacaxi</span>
+                                    <span class="bg-yellow-100 text-secondary py-1 px-3 rounded-full text-sm">Uva</span>
+                                    <span class="bg-yellow-100 text-secondary py-1 px-3 rounded-full text-sm">Limão</span>
+                                    <span class="bg-yellow-100 text-secondary py-1 px-3 rounded-full text-sm">Morango</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card bg-white rounded-xl overflow-hidden shadow-md">
+                            <img src="https://ogimg.infoglobo.com.br/in/25354618-3cc-6e6/FT1086A/fotos-picoles-4.png" 
+                                 alt="Picolés cremosos" 
+                                 class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-2">Picolés Cremosos</h3>
+                                <p class="mb-3">
+                                    Deliciosos picolés cremosos feitos com leite de alta qualidade.
+                                </p>
+                                <p class="font-medium text-accent1">Sabores Disponíveis:</p>
+                                <div class="mt-2 flex flex-wrap gap-2">
+                                    <span class="bg-blue-100 text-accent1 py-1 px-3 rounded-full text-sm">Chocolate</span>
+                                    <span class="bg-blue-100 text-accent1 py-1 px-3 rounded-full text-sm">Leite Condensado</span>
+                                    <span class="bg-blue-100 text-accent1 py-1 px-3 rounded-full text-sm">Coco</span>
+                                    <span class="bg-blue-100 text-accent1 py-1 px-3 rounded-full text-sm">Chocolate Branco</span>
+                                    <span class="bg-blue-100 text-accent1 py-1 px-3 rounded-full text-sm">Amendoim</span>
+                                    <span class="bg-blue-100 text-accent1 py-1 px-3 rounded-full text-sm">Flocos</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card bg-white rounded-xl overflow-hidden shadow-md">
+                            <img src="https://gkpb.com.br/wp-content/uploads/2024/09/banner-oggi.jpg" 
+                                 alt="Picolés especiais" 
+                                 class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-2">Picolés Especiais</h3>
+                                <p class="mb-3">
+                                    Nossa linha gourmet com sabores diferenciados para os mais exigentes paladares.
+                                </p>
+                                <p class="font-medium text-accent1">Sabores Exclusivos:</p>
+                                <div class="mt-2 flex flex-wrap gap-2">
+                                    <span class="bg-green-100 text-accent2 py-1 px-3 rounded-full text-sm">Graviola</span>
+                                    <span class="bg-green-100 text-accent2 py-1 px-3 rounded-full text-sm">Cupuaçu</span>
+                                    <span class="bg-green-100 text-accent2 py-1 px-3 rounded-full text-sm">Kiwi</span>
+                                    <span class="bg-green-100 text-accent2 py-1 px-3 rounded-full text-sm">Tapioca c/ Coco</span>
+                                    <span class="bg-green-100 text-accent2 py-1 px-3 rounded-full text-sm">Passas ao Rum</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Açaí -->
+                <div id="acai" class="product-tab-content hidden">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="product-card bg-white rounded-xl overflow-hidden shadow-md">
+                            <img src="https://splitacai.com.br/wp-content/uploads/2021/10/tigela-de-acai-split.jpg" 
+                                 alt="Tigela de açaí" 
+                                 class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-2">Açaí na Tigela</h3>
+                                <p class="mb-3">
+                                    Delicioso açaí na tigela com diversas opções de acompanhamentos.
+                                </p>
+                                <p class="font-medium text-accent1">Acompanhamentos:</p>
+                                <ul class="mt-2 grid grid-cols-2 gap-x-2 gap-y-1">
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Banana</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Granola</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Leite em pó</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Leite condensado</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Morango</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Confetes</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card bg-white rounded-xl overflow-hidden shadow-md">
+                            <img src="https://img.freepik.com/fotos-premium/tigela-de-acai-com-flocos-de-kiwi-banana-e-aveia-sobre-uma-mesa-com-decoracao-tropical_322182-305.jpg" 
+                                 alt="Açaí com frutas" 
+                                 class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-2">Açaí com Frutas</h3>
+                                <p class="mb-3">
+                                    Uma combinação perfeita de açaí com frutas frescas para um lanche nutritivo.
+                                </p>
+                                <div class="mt-4 flex justify-between">
+                                    <div>
+                                        <p class="font-medium text-accent1 mb-1">Tamanhos:</p>
+                                        <ul>
+                                            <li>300ml</li>
+                                            <li>500ml</li>
+                                            <li>700ml</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-accent1 mb-1">Adicionais:</p>
+                                        <ul>
+                                            <li>Mel</li>
+                                            <li>Paçoca</li>
+                                            <li>Castanhas</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card bg-white rounded-xl overflow-hidden shadow-md">
+                            <img src="https://i.pinimg.com/736x/b3/e0/a5/b3e0a5678eccd90997a85adb6bbcbbfc.jpg" 
+                                 alt="Açaí para viagem" 
+                                 class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-2">Açaí para Viagem</h3>
+                                <p class="mb-3">
+                                    Leve nosso açaí para onde quiser em embalagens práticas e seguras.
+                                </p>
+                                <p class="font-medium text-accent1">Informações Nutricionais:</p>
+                                <ul class="mt-2">
+                                    <li class="flex items-center mb-2">
+                                        <i class="fas fa-leaf text-accent2 mr-2"></i>
+                                        <span>Rico em antioxidantes</span>
+                                    </li>
+                                    <li class="flex items-center mb-2">
+                                        <i class="fas fa-leaf text-accent2 mr-2"></i>
+                                        <span>Fonte de energia</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-leaf text-accent2 mr-2"></i>
+                                        <span>Alto valor nutricional</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Outros Itens -->
+                <div id="outros" class="product-tab-content hidden">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div class="product-card bg-white rounded-xl overflow-hidden shadow-md">
+                            <img src="https://t4.ftcdn.net/jpg/07/66/69/67/360_F_766696789_qRCj9F9Do21qCJ7tEAkmUBr51vVcuLl8.jpg" 
+                                 alt="Sorvetes especiais" 
+                                 class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-2">Skimos</h3>
+                                <p class="mb-3">
+                                    Deliciosos sorvetes cobertos com chocolate.
+                                </p>
+                                <p class="font-medium text-accent1">Variedades:</p>
+                                <ul class="mt-2">
+                                    <li class="flex items-center mb-2">
+                                        <i class="fas fa-check text-accent2 mr-2"></i>
+                                        <span>Skimo Chococo</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <i class="fas fa-check text-accent2 mr-2"></i>
+                                        <span>Skimo Morango</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card bg-white rounded-xl overflow-hidden shadow-md">
+                            <img src="https://img.freepik.com/vetores-premium/sorvete-em-um-copo-de-waffle-e-picole-um-conjunto-de-varios-sorvetes-uma-grande-colecao-de-sorvete-doce-sobremesa-fria-ilustracao-vetorial_538993-364.jpg" 
+                                 alt="Casquinhas e acessórios" 
+                                 class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-2">Acessórios</h3>
+                                <p class="mb-3">
+                                    Complementos para tornar seu sorvete ainda mais especial.
+                                </p>
+                                <p class="font-medium text-accent1">Produtos:</p>
+                                <ul class="mt-2 grid grid-cols-2 gap-x-2 gap-y-1">
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Cestinhas</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Casquinhas</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Cascão</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Canudinhos</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Granulados</li>
+                                    <li><i class="fas fa-circle text-xs mr-1 text-primary"></i> Coberturas</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card bg-white rounded-xl overflow-hidden shadow-md">
+                            <img src="https://i.pinimg.com/originals/e2/83/9f/e2839fb497ebb4e3492564b2346b5f28.png" 
+                                 alt="Açaí gourmet" 
+                                 class="w-full h-48 object-cover">
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold mb-2">Opções Especiais</h3>
+                                <p class="mb-3">
+                                    Opções para todos os gostos e necessidades, incluindo produtos veganos.
+                                </p>
+                                <div class="mt-4">
+                                    <span class="inline-block bg-green-100 text-accent2 py-1 px-4 rounded-full font-medium mb-2 mr-2">
+                                        Vegano
+                                    </span>
+                                    <span class="inline-block bg-blue-100 text-accent1 py-1 px-4 rounded-full font-medium mb-2 mr-2">
+                                        Sem Lactose
+                                    </span>
+                                    <span class="inline-block bg-pink-100 text-primary py-1 px-4 rounded-full font-medium mb-2">
+                                        Zero Açúcar
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12 fade-in">
+                <p class="text-lg mb-6">
+                    Leve para casa e garanta esse sabor para toda a família. Nossos produtos são feitos com ingredientes selecionados. 
+                    A marca costuma estar na faixa de preço média a alta, dependendo do tipo de sorvete, mas clientes também mencionam preço justo.
+                </p>
+                <a href="#onde-encontrar" class="btn-secondary py-3 px-8 rounded-lg font-medium inline-block">
+                    Onde Encontrar Nossos Produtos
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- Onde Nos Encontrar Section -->
+    <section id="onde-encontrar" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center text-primary fade-in">Onde Nos Encontrar</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+                <!-- Fábrica e Sede -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden fade-in">
+                    <div class="bg-primary py-4 px-6">
+                        <h3 class="text-xl font-semibold text-white">SORVETES MOLEKA Nilópolis - RJ</h3>
+                        <p class="text-white opacity-90">Fábrica e Sede</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6 flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
+                            <p>Av. Roberto Silveira, 1456 - Olinda, Nilópolis - RJ, 26545-770, Brasil.</p>
+                        </div>
+                        
+                        <div class="mb-6 flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3 text-primary"></i>
+                            <p>(21) 3762-5290 e (+55) 21977471816.</p>
+                        </div>
+                        
+                        <div class="mb-6 flex items-start">
+                            <i class="fas fa-clock mt-1 mr-3 text-primary"></i>
+                            <div>
+                                <p class="mb-1"><span class="font-medium">Segunda a Sexta-feira:</span> 09:00 às 18:00</p>
+                                <p class="mb-1"><span class="font-medium">Sábado:</span> 09:00 às 18:00</p>
+                                <p><span class="font-medium">Domingo:</span> 09:00 às 12:30</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6 flex items-start">
+                            <i class="fas fa-train mt-1 mr-3 text-primary"></i>
+                            <p>Você pode chegar a esta localização usando transportes públicos, com a parada Nilópolis Supervia Trem a 42 metros de distância.</p>
+                        </div>
+                        
+                        <div class="bg-pink-50 p-4 rounded-lg">
+                            <p class="font-medium mb-2">Áreas de Distribuição:</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-white py-1 px-3 rounded-full text-sm shadow-sm">Nilópolis</span>
+                                <span class="bg-white py-1 px-3 rounded-full text-sm shadow-sm">Olinda</span>
+                                <span class="bg-white py-1 px-3 rounded-full text-sm shadow-sm">Anchieta</span>
+                                <span class="bg-white py-1 px-3 rounded-full text-sm shadow-sm">Mesquita</span>
+                                <span class="bg-white py-1 px-3 rounded-full text-sm shadow-sm">Nova Iguaçu</span>
+                                <span class="bg-white py-1 px-3 rounded-full text-sm shadow-sm">Guadalupe</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Distribuidora Jacarepaguá -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden fade-in">
+                    <div class="bg-secondary py-4 px-6">
+                        <h3 class="text-xl font-semibold text-white">DISTRIBUIDORA MOLEKA JACAREPAGUA</h3>
+                        <p class="text-white opacity-90">Ponto de Distribuição</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-6 flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-secondary"></i>
+                            <div>
+                                <p class="mb-2">Estrada Rio Grande 3486 Loja C, Jacarepaguá</p>
+                                <p>Rua Andre Rocha 3465 Loja A, Curicica</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6 flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3 text-secondary"></i>
+                            <p>983703995 / 965774417</p>
+                        </div>
+                        
+                        <div class="mb-6 flex items-start">
+                            <i class="fas fa-clock mt-1 mr-3 text-secondary"></i>
+                            <div>
+                                <p class="mb-1"><span class="font-medium">Segunda a Sábado:</span> 8h às 18h</p>
+                                <p><span class="font-medium">Domingo:</span> 8h às 12h</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-10 text-center">
+                            <p class="text-xl font-medium text-primary mb-4">Esperamos sua visita!</p>
+                            <a href="tel:+5521983703995" class="btn-secondary py-2 px-6 rounded-lg inline-block">
+                                <i class="fas fa-phone-alt mr-2"></i> Ligar Agora
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Map Placeholder -->
+            <div class="rounded-xl overflow-hidden shadow-lg h-72 md:h-96 fade-in bg-gray-100 flex items-center justify-center relative">
+                <img src="https://cdn.diariodolitoral.com.br/img/pc/920/610/dn_arquivo/2025/02/sorveteria-royal-santos.jpg" 
+                     alt="Fábrica de sorvetes" 
+                     class="w-full h-full object-cover absolute opacity-20">
+                <div class="z-10 text-center px-4">
+                    <i class="fas fa-map-marked-alt text-6xl text-primary mb-4"></i>
+                    <h3 class="text-2xl font-bold mb-2">Localização da Fábrica</h3>
+                    <p class="mb-4">Av. Roberto Silveira, 1456 - Olinda, Nilópolis - RJ</p>
+                    <a href="https://maps.app.goo.gl/5yBE1JK5uNXDB1yL8" target="_blank" class="btn-primary py-2 px-6 rounded-lg inline-block">
+                        <i class="fas fa-directions mr-2"></i> Como Chegar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- O que Nossos Clientes Dizem Section -->
+    <section id="depoimentos" class="py-16 bg-pink-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 text-center text-primary fade-in">O que Nossos Clientes Dizem</h2>
+            
+            <div class="flex items-center justify-center mb-10 fade-in">
+                <div class="flex items-center mr-8">
+                    <div class="mr-3">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                    </div>
+                    <span class="text-lg">5/5 (10 avaliações)</span>
+                </div>
+                
+                <div class="flex items-center">
+                    <div class="mr-3">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star-half-alt text-yellow-400"></i>
+                    </div>
+                    <span class="text-lg">4.4/5 (598 avaliações)</span>
+                </div>
+            </div>
+            
+            <!-- Testimonial Carousel -->
+            <div class="testimonial-container fade-in relative">
+                <div class="testimonial-track">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial-slide px-4">
+                        <div class="bg-white p-8 rounded-xl shadow-md max-w-3xl mx-auto testimonial-card">
+                            <div class="flex items-start mb-6">
+                                <div class="mr-4 w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center">
+                                    <i class="fas fa-user text-2xl text-primary"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold">Cliente Satisfeito</h3>
+                                    <div class="flex mb-1">
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                    </div>
+                                    <p class="text-gray-500">Cliente desde 2021</p>
+                                </div>
+                            </div>
+                            <blockquote class="text-lg italic">
+                                "Satisfeito e sem palavras. Atendimento cordial, produtos de qualidade e preço justo. Recomendo!"
+                            </blockquote>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial-slide px-4">
+                        <div class="bg-white p-8 rounded-xl shadow-md max-w-3xl mx-auto testimonial-card">
+                            <div class="flex items-start mb-6">
+                                <div class="mr-4 w-16 h-16 rounded-full bg-yellow-100 flex items-center justify-center">
+                                    <i class="fas fa-user text-2xl text-secondary"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold">Cliente de Longa Data</h3>
+                                    <div class="flex mb-1">
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                    </div>
+                                    <p class="text-gray-500">Cliente desde 1990</p>
+                                </div>
+                            </div>
+                            <blockquote class="text-lg italic">
+                                "Muito bom, Moleka! Conheço desde 1990 e a Moleka Sorvetes é deliciosa!"
+                            </blockquote>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 3 -->
+                    <div class="testimonial-slide px-4">
+                        <div class="bg-white p-8 rounded-xl shadow-md max-w-3xl mx-auto testimonial-card">
+                            <div class="flex items-start mb-6">
+                                <div class="mr-4 w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
+                                    <i class="fas fa-user text-2xl text-accent1"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold">Amante de Picolés</h3>
+                                    <div class="flex mb-1">
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                    </div>
+                                    <p class="text-gray-500">Cliente desde 2019</p>
+                                </div>
+                            </div>
+                            <blockquote class="text-lg italic">
+                                "O atendimento é nota 10. O açaí é bom e os picolés são ótimos."
+                            </blockquote>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 4 -->
+                    <div class="testimonial-slide px-4">
+                        <div class="bg-white p-8 rounded-xl shadow-md max-w-3xl mx-auto testimonial-card">
+                            <div class="flex items-start mb-6">
+                                <div class="mr-4 w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                                    <i class="fas fa-user text-2xl text-accent2"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold">Cliente Entusiasta</h3>
+                                    <div class="flex mb-1">
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star-half-alt text-yellow-400"></i>
+                                    </div>
+                                    <p class="text-gray-500">Cliente desde 2020</p>
+                                </div>
+                            </div>
+                            <blockquote class="text-lg italic">
+                                "Um excellent athendimento. Variety of produtos and muita qualidade!!! Ameiiiii, can go sem medo!!"
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carousel Controls -->
+                <button class="testimonial-prev absolute top-1/2 left-0 transform -translate-y-1/2 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md z-10 focus:outline-none">
+                    <i class="fas fa-chevron-left text-primary"></i>
+                </button>
+                <button class="testimonial-next absolute top-1/2 right-0 transform -translate-y-1/2 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md z-10 focus:outline-none">
+                    <i class="fas fa-chevron-right text-primary"></i>
+                </button>
+                
+                <!-- Carousel Indicators -->
+                <div class="flex justify-center mt-6 space-x-2">
+                    <button class="testimonial-dot w-3 h-3 rounded-full bg-primary opacity-100"></button>
+                    <button class="testimonial-dot w-3 h-3 rounded-full bg-primary opacity-50"></button>
+                    <button class="testimonial-dot w-3 h-3 rounded-full bg-primary opacity-50"></button>
+                    <button class="testimonial-dot w-3 h-3 rounded-full bg-primary opacity-50"></button>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12 max-w-3xl mx-auto fade-in">
+                <p class="text-lg">
+                    Nossos profissionais e representantes estão prontos para atender suas solicitações, 
+                    objetivando sempre o melhor custo-benefício em função de suas necessidades.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <!-- Contact Info -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-secondary">Contato</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary"></i>
+                            <span>Av. Roberto Silveira, 1456 - Olinda, Nilópolis - RJ</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-3 text-primary"></i>
+                            <span>(21) 3762-5290</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-mobile-alt mt-1 mr-3 text-primary"></i>
+                            <span>(+55) 21977471816</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-3 text-primary"></i>
+                            <span>contato@molekasorvetes.com.br</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-secondary">Links Rápidos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="hover:text-primary transition">Home</a></li>
+                        <li><a href="#quem-somos" class="hover:text-primary transition">Quem Somos</a></li>
+                        <li><a href="#nossos-produtos" class="hover:text-primary transition">Nossos Produtos</a></li>
+                        <li><a href="#onde-encontrar" class="hover:text-primary transition">Onde Nos Encontrar</a></li>
+                        <li><a href="#depoimentos" class="hover:text-primary transition">O que Nossos Clientes Dizem</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Follow Us -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 text-secondary">Siga-nos</h3>
+                    <div class="flex space-x-4 mb-6">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-900 hover:bg-primary hover:text-white transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-900 hover:bg-primary hover:text-white transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-900 hover:bg-primary hover:text-white transition">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                    <p class="text-sm text-gray-400 mb-2">
+                        Horário de Atendimento:
+                    </p>
+                    <p class="text-sm text-gray-400">
+                        Seg-Sex: 09:00 - 18:00<br>
+                        Sáb: 09:00 - 18:00<br>
+                        Dom: 09:00 - 12:30
+                    </p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-6 mt-6 text-center text-sm text-gray-400">
+                <p>&copy; 2024 Moleka Sorvetes - Todos os direitos reservados.</p>
+                <p class="mt-2">A Maravilhosa Fábrica de Sabores Artesanais desde 2004</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300 z-50">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+    
+    <!-- JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Fade-In Animation on Scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        function checkFade() {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 50) {
+                    element.classList.add('appear');
+                }
+            });
+        }
+        
+        // Run on load
+        window.addEventListener('load', checkFade);
+        
+        // Run on scroll
+        window.addEventListener('scroll', checkFade);
+        
+        // Product Tabs
+        const productTabBtns = document.querySelectorAll('.product-tab-btn');
+        const productTabContents = document.querySelectorAll('.product-tab-content');
+        
+        productTabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                productTabBtns.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.classList.remove('bg-primary');
+                    btn.classList.remove('text-white');
+                    btn.classList.add('bg-gray-200');
+                    btn.classList.add('text-gray-700');
+                });
+                
+                // Add active class to clicked button
+                btn.classList.add('active');
+                btn.classList.add('bg-primary');
+                btn.classList.add('text-white');
+                btn.classList.remove('bg-gray-200');
+                btn.classList.remove('text-gray-700');
+                
+                // Hide all tab contents
+                productTabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                // Show selected tab content
+                const target = btn.getAttribute('data-target');
+                document.getElementById(target).classList.remove('hidden');
+            });
+        });
+        
+        // Testimonial Carousel
+        const testimonialTrack = document.querySelector('.testimonial-track');
+        const testimonialSlides = document.querySelectorAll('.testimonial-slide');
+        const testimonialDots = document.querySelectorAll('.testimonial-dot');
+        const testimonialPrev = document.querySelector('.testimonial-prev');
+        const testimonialNext = document.querySelector('.testimonial-next');
+        
+        let testimonialIndex = 0;
+        const testimonialCount = testimonialSlides.length;
+        
+        function updateTestimonialCarousel() {
+            testimonialTrack.style.transform = `translateX(-${testimonialIndex * 100}%)`;
+            
+            testimonialDots.forEach((dot, index) => {
+                if (index === testimonialIndex) {
+                    dot.classList.add('opacity-100');
+                    dot.classList.remove('opacity-50');
+                } else {
+                    dot.classList.add('opacity-50');
+                    dot.classList.remove('opacity-100');
+                }
+            });
+        }
+        
+        testimonialNext.addEventListener('click', () => {
+            testimonialIndex = (testimonialIndex + 1) % testimonialCount;
+            updateTestimonialCarousel();
+        });
+        
+        testimonialPrev.addEventListener('click', () => {
+            testimonialIndex = (testimonialIndex - 1 + testimonialCount) % testimonialCount;
+            updateTestimonialCarousel();
+        });
+        
+        testimonialDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                testimonialIndex = index;
+                updateTestimonialCarousel();
+            });
+        });
+        
+        // Auto-advance testimonials every 5 seconds
+        setInterval(() => {
+            testimonialIndex = (testimonialIndex + 1) % testimonialCount;
+            updateTestimonialCarousel();
+        }, 5000);
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Close mobile menu if open
+                mobileMenu.classList.add('hidden');
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 70, // Adjust for header height
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Back to Top Button
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>

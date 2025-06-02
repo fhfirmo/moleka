@@ -1,12 +1,12 @@
 
 import React from 'react';
-import { SaleItem, Theme } from '../../types';
-import { calculateAverageTicket } from '../../utils/chartUtils';
+import { SaleItem, Theme } from '../../types.ts';
+import { calculateAverageTicket } from '../../utils/chartUtils.ts';
 
 interface AverageTicketDisplayProps {
   data: SaleItem[];
   theme: Theme;
-  className?: string; // Added for positioning (e.g. mt-6)
+  className?: string; 
 }
 
 const DollarSignIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
@@ -19,9 +19,6 @@ const DollarSignIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 const AverageTicketDisplay: React.FC<AverageTicketDisplayProps> = ({ data, theme, className = '' }) => {
   const averageTicket = calculateAverageTicket(data);
 
-  // Panel styling is now handled by the parent sticky div in DashboardLayout
-  // This component just provides its content.
-  // const panelBgClasses = theme === 'dark' ? 'bg-gray-800' : 'bg-white border border-gray-200';
   const titleColorClass = theme === 'dark' ? 'text-blue-400' : 'text-blue-600';
   const valueColorClass = theme === 'dark' ? 'text-emerald-400' : 'text-emerald-600';
   const textColorClass = theme === 'dark' ? 'text-gray-400' : 'text-gray-600';
@@ -29,7 +26,6 @@ const AverageTicketDisplay: React.FC<AverageTicketDisplayProps> = ({ data, theme
 
 
   return (
-    // Removed panelBgClasses, p-4, rounded-xl, shadow-2xl from here. mt-6 is passed via className.
     <div className={className}> 
       <h3 className={`text-lg font-semibold ${titleColorClass} mb-2 flex items-center`}>
         <DollarSignIcon className={`h-6 w-6 mr-2 ${valueColorClass}`}/>

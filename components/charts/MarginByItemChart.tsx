@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { SaleItem, CategoryData, Theme } from '../../types';
-import { processMarginByItem, CHART_COLORS } from '../../utils/chartUtils';
+import { SaleItem, CategoryData, Theme } from '../../types.ts';
+import { processMarginByItem, CHART_COLORS } from '../../utils/chartUtils.ts';
 
 interface MarginByItemChartProps {
   data: SaleItem[];

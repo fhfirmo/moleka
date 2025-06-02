@@ -1,17 +1,20 @@
-import React from 'react';
+
+import React, { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { CategoryData, Theme } from '../../types'; // CategoryData is generic enough
-import { processTopItems, CHART_COLORS } from '../../utils/chartUtils';
+import { CategoryData, Theme } from '../../types.ts'; 
+import { processTopItems, CHART_COLORS } from '../../utils/chartUtils.ts';
 
 interface TopItemsChartProps {
-  data: any[]; // Generic data array
-  itemKey: string; // Key for the item name/category (e.g., 'productName', 'flavor')
-  metricKey: string; // Key for the value to be aggregated (e.g., 'quantity', 'grossValue', 'finalPurchaseValue')
+  data?: any[]; 
+  itemKey?: string; 
+  metricKey?: string; 
   topN?: number;
   theme: Theme;
-  valuePrefix?: string; // e.g., "R$ "
-  valueSuffix?: string; // e.g., " un"
-  metricNameLabel: string; // e.g., "Receita", "Quantidade Comprada", "Custo Total"
+  valuePrefix?: string; 
+  valueSuffix?: string; 
+  metricNameLabel: string; 
+  preProcessedData?: CategoryData[]; 
+  yAxisWidthOverride?: number; 
 }
 
 const TopItemsChart: React.FC<TopItemsChartProps> = ({ 
@@ -22,9 +25,19 @@ const TopItemsChart: React.FC<TopItemsChartProps> = ({
   theme,
   valuePrefix = '',
   valueSuffix = '',
-  metricNameLabel
+  metricNameLabel,
+  preProcessedData,
+  yAxisWidthOverride,
 }) => {
-  const processedData = processTopItems(data, itemKey, metricKey, topN);
+  const chartData = useMemo(() => {
+    if (preProcessedData && preProcessedData.length > 0) {
+      return preProcessedData;
+    }
+    if (data && itemKey && metricKey) {
+      return processTopItems(data, itemKey, metricKey, topN);
+    }
+    return [];
+  }, [preProcessedData, data, itemKey, metricKey, topN]);
 
   const axisStrokeColor = theme === 'dark' ? '#9CA3AF' : '#6B7280';
   const gridStrokeColor = theme === 'dark' ? '#4A5568' : '#E5E7EB';
@@ -33,16 +46,21 @@ const TopItemsChart: React.FC<TopItemsChartProps> = ({
   const tooltipLabelColor = theme === 'dark' ? '#E5E7EB' : '#1F2937';
   const tickFillColor = theme === 'dark' ? '#CBD5E0' : '#4B5563';
 
-  if (!processedData || processedData.length === 0) {
+  if (!chartData || chartData.length === 0) {
     return <p className={`text-center ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} py-10`}>Não há dados suficientes para exibir o ranking.</p>;
   }
   
-  const yAxisWidth = itemKey.toLowerCase().includes('produto') || itemKey.toLowerCase().includes('product') ? 150 : 120;
+  let yAxisWidth = 120; 
+  if (yAxisWidthOverride !== undefined) {
+    yAxisWidth = yAxisWidthOverride;
+  } else if (itemKey) { 
+     yAxisWidth = itemKey.toLowerCase().includes('produto') || itemKey.toLowerCase().includes('product') ? 150 : 120;
+  }
 
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart data={processedData} layout="vertical" margin={{ top: 5, right: 30, left: yAxisWidth > 120 ? 70 : 50, bottom: 5 }}>
+      <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 30, left: yAxisWidth > 120 ? 70 : 50, bottom: 5 }}>
         <CartesianGrid strokeDasharray="3 3" stroke={gridStrokeColor} horizontal={false} />
         <XAxis 
             type="number" 
@@ -62,11 +80,15 @@ const TopItemsChart: React.FC<TopItemsChartProps> = ({
           contentStyle={{ backgroundColor: tooltipBgColor, border: 'none', borderRadius: '0.5rem', color: tooltipLabelColor }}
           labelStyle={{ color: tooltipLabelColor, fontWeight: 'bold' }}
           itemStyle={{ color: legendColor }}
-          formatter={(value: number) => [`${valuePrefix}${value.toLocaleString('pt-BR', {minimumFractionDigits: metricKey.toLowerCase().includes('value') || metricKey.toLowerCase().includes('cost') ? 2 : 0, maximumFractionDigits: 2})}${valueSuffix}`, metricNameLabel]}
+          formatter={(value: number) => {
+             const isCurrencyLike = metricNameLabel.toLowerCase().includes('receita') || metricNameLabel.toLowerCase().includes('custo') || metricNameLabel.toLowerCase().includes('valor') || (valuePrefix && valuePrefix.includes('R$'));
+             const minimumFractionDigits = isCurrencyLike ? 2 : 0;
+             return [`${valuePrefix}${value.toLocaleString('pt-BR', {minimumFractionDigits: minimumFractionDigits, maximumFractionDigits: 2})}${valueSuffix}`, metricNameLabel];
+          }}
         />
         <Legend wrapperStyle={{ color: legendColor, paddingTop: '10px', fontSize: '12px' }} formatter={() => metricNameLabel} />
         <Bar dataKey="value" name={metricNameLabel} barSize={20}>
-          {processedData.map((entry, index) => (
+          {chartData.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
           ))}
         </Bar>

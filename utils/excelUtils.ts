@@ -1,48 +1,82 @@
+
 import * as XLSX from 'xlsx';
 import { SaleItem, ExpenseItem } from '../types';
 
 // Função auxiliar para converter data do Excel para objeto Date do JS
-function excelDateToJSDate(excelDate: number | string | Date): Date {
-  if (excelDate instanceof Date && !isNaN(excelDate.getTime())) {
-    return excelDate;
+// Garantindo que a data representa o dia do calendário local.
+function excelDateToJSDate(excelDateValue: number | string | Date): Date {
+  if (excelDateValue instanceof Date && !isNaN(excelDateValue.getTime())) {
+    // Se já é um objeto Date (ex: de cellDates:true), ele pode ser meia-noite UTC.
+    // Construímos uma nova data local usando os componentes UTC para evitar deslocamento de fuso.
+    return new Date(excelDateValue.getUTCFullYear(), excelDateValue.getUTCMonth(), excelDateValue.getUTCDate());
   }
-  if (typeof excelDate === 'string') {
-    // Try ISO format first
-    const isoParsed = new Date(excelDate);
-    if (!isNaN(isoParsed.getTime()) && excelDate.includes('-') && excelDate.includes('T')) { // Basic check for ISO-like string
-        return isoParsed;
+
+  if (typeof excelDateValue === 'string') {
+    let year, month, day;
+
+    // Tenta YYYY-MM-DD (pode ter T... mas pegamos só a parte da data)
+    // new Date("YYYY-MM-DD") é interpretado como UTC pela especificação, então parseamos manualmente.
+    const isoMatch = excelDateValue.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (isoMatch) {
+        year = parseInt(isoMatch[1], 10);
+        month = parseInt(isoMatch[2], 10) - 1; // Mês JS é 0-indexado
+        day = parseInt(isoMatch[3], 10);
+        return new Date(year, month, day); // Cria data local
     }
-    // Try dd/mm/yyyy or mm/dd/yyyy (less reliable without knowing exact format)
-    // For now, relying on cellDates: true or direct number parsing for robustness
-    const parts = excelDate.split(/[/.-]/);
+
+    // Tenta formatos comuns como dd/mm/yyyy ou mm/dd/yyyy
+    const parts = excelDateValue.split(/[/.-]/);
     if (parts.length === 3) {
-        const year = parseInt(parts[2], 10);
-        const month = parseInt(parts[1], 10) -1; // JS months are 0-indexed
-        const day = parseInt(parts[0], 10);
-        if (year > 1900 && year < 2100 && month >=0 && month <=11 && day >=1 && day <=31) {
-            const manualDate = new Date(year, month, day);
-            if(!isNaN(manualDate.getTime())) return manualDate;
+        const p0 = parseInt(parts[0], 10);
+        const p1 = parseInt(parts[1], 10);
+        const p2 = parseInt(parts[2], 10);
+
+        // Heurística para determinar o formato. Pode precisar de ajuste se os formatos variarem muito.
+        if (p2 > 1900 && p2 < 2100) { // Ano é p2 (ex: 2022)
+            if (p1 > 0 && p1 <= 12 && p0 > 0 && p0 <= 31) { // Assume dd/mm/yyyy
+                day = p0; month = p1 - 1; year = p2;
+            } else if (p0 > 0 && p0 <= 12 && p1 > 0 && p1 <= 31) { // Assume mm/dd/yyyy
+                day = p1; month = p0 - 1; year = p2;
+            }
+        } else if (p0 > 1900 && p0 < 2100) { // Ano é p0
+            year = p0;
+            if (p1 > 0 && p1 <= 12 && p2 > 0 && p2 <= 31) { // Assume yyyy/mm/dd
+                month = p1 - 1; day = p2;
+            } else if (p2 > 0 && p2 <= 12 && p1 > 0 && p1 <= 31) { // Assume yyyy/dd/mm
+                month = p2 - 1; day = p1;
+            }
+        }
+        
+        if (year !== undefined && month !== undefined && day !== undefined && month >=0 && month <=11 && day >=1 && day <=31) {
+            return new Date(year, month, day); // Cria data local
         }
     }
 
-
-    const numDate = parseFloat(excelDate);
-    if (!isNaN(numDate)) {
-      excelDate = numDate;
-    } else {
-      // console.warn(`Could not parse date string to number: ${excelDate}`);
-      // Fallback for strings like "YYYY-MM-DD" or other common date formats not caught by new Date() directly
-      const stringDate = new Date(excelDate);
-      if (!isNaN(stringDate.getTime())) return stringDate;
-      throw new Error(`Invalid date string for Excel conversion: ${excelDate}`);
+    // Se for uma string representando um número serial do Excel
+    const numSerial = parseFloat(excelDateValue);
+    if (!isNaN(numSerial) && numSerial > 0 && numSerial < 2958466) { // Limites razoáveis para datas Excel
+      const date_info_utc = new Date(Math.round((numSerial - 25569) * 86400 * 1000));
+      return new Date(date_info_utc.getUTCFullYear(), date_info_utc.getUTCMonth(), date_info_utc.getUTCDate());
     }
+
+    console.warn(`Não foi possível parsear a string de data: ${excelDateValue}. Retornando data epoch.`);
+    return new Date(0); // Fallback para strings não parseáveis
   }
-  if (typeof excelDate === 'number') {
-    const jsDate = new Date(Math.round((excelDate - 25569) * 86400 * 1000));
-    return jsDate;
+
+  if (typeof excelDateValue === 'number') {
+    // Converte número serial do Excel para data UTC, depois pega componentes para data local
+    if (excelDateValue > 0 && excelDateValue < 2958466) { // Limites razoáveis
+        const date_info_utc = new Date(Math.round((excelDateValue - 25569) * 86400 * 1000));
+        return new Date(date_info_utc.getUTCFullYear(), date_info_utc.getUTCMonth(), date_info_utc.getUTCDate());
+    }
+    console.warn(`Número serial de data Excel fora do esperado: ${excelDateValue}. Retornando data epoch.`);
+    return new Date(0);
   }
-  throw new Error(`Invalid date value for Excel conversion: ${excelDate}`);
+
+  console.warn(`Tipo de data inválido: ${typeof excelDateValue}. Retornando data epoch.`);
+  return new Date(0); // Fallback para outros tipos inválidos
 }
+
 
 // Função para parse de números que podem ter R$ ou vírgula como decimal
 function parseCurrencyValue(value: any): number {

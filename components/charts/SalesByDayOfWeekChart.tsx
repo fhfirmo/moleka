@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { SaleItem, DayOfWeekData, Theme } from '../../types';
-import { processSalesByDayOfWeek, CHART_COLORS } from '../../utils/chartUtils';
+import { SaleItem, DayOfWeekData, Theme } from '../../types.ts';
+import { processSalesByDayOfWeek, CHART_COLORS } from '../../utils/chartUtils.ts';
 
 interface SalesByDayOfWeekChartProps {
   data: SaleItem[];

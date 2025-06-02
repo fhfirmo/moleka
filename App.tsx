@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import DashboardLayout from './components/DashboardLayout';
-import DashboardLayout2 from './components/DashboardLayout2'; 
-import { useDashboardData } from './hooks/useDashboardData'; // Updated import
-import LoadingSpinner from './components/ui/LoadingSpinner';
-import { exportToCSV } from './utils/exportUtils';
-import DashboardHeader from './components/DashboardHeader';
-import { Theme } from './types';
+import DashboardLayout from './components/DashboardLayout.tsx';
+import DashboardLayout2 from './components/DashboardLayout2.tsx'; 
+import { useDashboardData } from './hooks/useDashboardData.ts';
+import LoadingSpinner from './components/ui/LoadingSpinner.tsx';
+import { exportToCSV } from './utils/exportUtils.ts';
+import DashboardHeader from './components/DashboardHeader.tsx';
+import { Theme } from './types.ts';
 
 const HEADER_HEIGHT_PX = 76; 
 
@@ -19,13 +19,14 @@ const App: React.FC = () => {
     filters,
     setFilters,
     filteredSalesData,
-    allExpenseData, // Get expense data
+    allExpenseData, 
     uniqueClientTypes,
     uniqueProductNames,
     uniqueFlavors,
+    uniqueYears, // Added
     resetFilters,
     allSalesData,
-  } = useDashboardData(); // Updated hook call
+  } = useDashboardData();
 
   const [theme, setTheme] = useState<Theme>(() => {
     const savedTheme = localStorage.getItem('dashboardTheme') as Theme | null;
@@ -121,6 +122,7 @@ const App: React.FC = () => {
             uniqueClientTypes={uniqueClientTypes}
             uniqueProductNames={uniqueProductNames}
             uniqueFlavors={uniqueFlavors}
+            uniqueYears={uniqueYears} // Added
             headerHeight={HEADER_HEIGHT_PX}
           />
         ) : (
@@ -129,12 +131,13 @@ const App: React.FC = () => {
             filters={filters}
             setFilters={setFilters}
             resetFilters={resetFilters}
-            filteredData={filteredSalesData} // Corrected prop name here
+            filteredData={filteredSalesData} 
             allSalesData={allSalesData}
             allExpenseData={allExpenseData} 
             uniqueClientTypes={uniqueClientTypes}
             uniqueProductNames={uniqueProductNames}
             uniqueFlavors={uniqueFlavors}
+            uniqueYears={uniqueYears} // Added
             headerHeight={HEADER_HEIGHT_PX}
           />
         )}

@@ -1,18 +1,18 @@
+
 import React, { useState, useMemo } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceArea } from 'recharts';
-import { ExpenseItem, TimeSeriesData, Theme, AggregationPeriod } from '../../types'; // Use ExpenseItem
-import { processPurchaseDataOverTime, formatDateForChartAxis, CHART_COLORS } from '../../utils/chartUtils'; // Use processPurchaseDataOverTime
+import { ExpenseItem, TimeSeriesData, Theme, AggregationPeriod } from '../../types.ts'; 
+import { processPurchaseDataOverTime, formatDateForChartAxis, CHART_COLORS } from '../../utils/chartUtils.ts'; 
 import { ptBR } from 'date-fns/locale';
 
 interface PurchaseDataOverTimeChartProps {
-  purchaseData: ExpenseItem[]; // Changed prop name
+  purchaseData: ExpenseItem[]; 
   theme: Theme;
 }
 
-type MetricKey = 'costValue' | 'itemCount'; // Metrics for purchases
+type MetricKey = 'costValue' | 'itemCount'; 
 type ChartDisplayType = 'line' | 'bar';
 
-// Icons (can reuse from SalesOverTimeChart or define new ones if needed)
 const TrendingUpIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1" {...props}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
@@ -101,7 +101,7 @@ const PurchaseDataOverTimeChart: React.FC<PurchaseDataOverTimeChartProps> = ({ p
   const aggregationPeriodConfig: Record<AggregationPeriod, { name: string; icon?: React.FC<React.SVGProps<SVGSVGElement>>, btnColor: string }> = {
     day: { name: 'Dia', icon: CalendarDaysIcon, btnColor: 'cyan' },
     week: { name: 'Semana', icon: undefined, btnColor: 'sky' },
-    'bi-week': { name: 'Quinzena', icon: undefined, btnColor: 'indigo'},
+    'bi-week': { name: 'Quinzena', icon: undefined, btnColor: 'indigo' },
     month: { name: 'Mês', icon: CalendarIcon, btnColor: 'violet' },
   };
   
@@ -116,7 +116,7 @@ const PurchaseDataOverTimeChart: React.FC<PurchaseDataOverTimeChartProps> = ({ p
             break;
         case 'display':
             isActive = chartDisplayType === key;
-            colorName = isActive ? (key === 'line' ? 'lime' : 'fuchsia') : 'gray'; // Different colors for purchase chart types
+            colorName = isActive ? (key === 'line' ? 'lime' : 'fuchsia') : 'gray'; 
             break;
         case 'aggregation':
             isActive = activeAggregationPeriod === key;
@@ -137,7 +137,7 @@ const PurchaseDataOverTimeChart: React.FC<PurchaseDataOverTimeChartProps> = ({ p
     margin: { top: 5, right: 20, left: 20, bottom: 20 },
     onMouseDown: (e: any) => e && setZoomArea(prev => ({ ...prev, refAreaLeft: e.activeLabel })),
     onMouseMove: (e: any) => e && zoomArea.refAreaLeft && setZoomArea(prev => ({ ...prev, refAreaRight: e.activeLabel })),
-    onMouseUp: handleZoom,
+    onMouseUp: handleZoom
   };
 
   return (

@@ -60,16 +60,23 @@ export interface Filters {
   flavors: string[];
   seasons: Season[];
   months: MonthKey[]; 
+  years: string[]; // Added for year filter
 }
 
 // For chart data structures
 export interface TimeSeriesData {
   date: string; 
-  quantity?: number;
-  grossValue?: number; // For Sales
-  netValue?: number; // For Sales
-  costValue?: number; // For Purchases/Expenses
+  // From sales
+  quantity?: number; // Sales quantity
+  grossValue?: number; // For Sales revenue calculation
+  netValue?: number; // For Sales net revenue calculation
+  // From purchases/expenses
+  costValue?: number; // This is finalPurchaseValue from ExpenseItem, represents total cost for a period
   itemCount?: number; // For Purchases quantity over time
+  // For new profit chart
+  revenueValue?: number; // Aggregated revenue for the period (e.g., from sales grossValue)
+  expenseValue?: number; // Aggregated expenses for the period (e.g., from expense finalPurchaseValue)
+  profitValue?: number;  // Calculated as revenueValue - expenseValue
 }
 
 export interface CategoryData {

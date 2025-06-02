@@ -2,6 +2,8 @@ import { SaleItem, ExpenseItem, TimeSeriesData, CategoryData, DayOfWeekData, Agg
 import { format, parseISO, startOfWeek, getISOWeek, startOfMonth } from 'date-fns';
 import { ptBR, Locale } from 'date-fns/locale';
 
+export { ptBR }; // Export ptBR locale for use in charts
+
 export const processSalesOverTime = (data: SaleItem[], aggregationPeriod: AggregationPeriod): TimeSeriesData[] => {
   const aggregated: { [dateKey: string]: TimeSeriesData } = {};
 
@@ -81,6 +83,74 @@ export const processPurchaseDataOverTime = (data: ExpenseItem[], aggregationPeri
   });
 
   return Object.values(aggregated).sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+};
+
+export const processProfitOverTime = (
+  salesData: SaleItem[],
+  expenseData: ExpenseItem[],
+  aggregationPeriod: AggregationPeriod
+): TimeSeriesData[] => {
+  const aggregated: { [dateKey: string]: TimeSeriesData } = {};
+
+  // Process Sales (using grossValue as revenueValue)
+  salesData.forEach(item => {
+    let periodStartDate: Date;
+    const saleDate = item.saleDate;
+
+    switch (aggregationPeriod) {
+      case 'week': periodStartDate = startOfWeek(saleDate, { weekStartsOn: 1 }); break;
+      case 'bi-week':
+        const saleDayOfMonth = saleDate.getDate();
+        periodStartDate = saleDayOfMonth <= 15
+            ? new Date(saleDate.getFullYear(), saleDate.getMonth(), 1)
+            : new Date(saleDate.getFullYear(), saleDate.getMonth(), 16);
+        break;
+      case 'month': periodStartDate = startOfMonth(saleDate); break;
+      case 'day': default: periodStartDate = new Date(saleDate.getFullYear(), saleDate.getMonth(), saleDate.getDate()); break;
+    }
+    const dateKey = format(periodStartDate, 'yyyy-MM-dd');
+
+    if (!aggregated[dateKey]) {
+      aggregated[dateKey] = { date: dateKey, revenueValue: 0, expenseValue: 0, profitValue: 0 };
+    }
+    aggregated[dateKey].revenueValue! += item.grossValue;
+  });
+
+  // Process Expenses (using finalPurchaseValue as expenseValue)
+  expenseData.forEach(item => {
+    if (!item.purchaseDate) return;
+    let periodStartDate: Date;
+    const purchaseDate = item.purchaseDate;
+
+    switch (aggregationPeriod) {
+      case 'week': periodStartDate = startOfWeek(purchaseDate, { weekStartsOn: 1 }); break;
+      case 'bi-week':
+        const purchaseDayOfMonth = purchaseDate.getDate();
+        periodStartDate = purchaseDayOfMonth <= 15
+            ? new Date(purchaseDate.getFullYear(), purchaseDate.getMonth(), 1)
+            : new Date(purchaseDate.getFullYear(), purchaseDate.getMonth(), 16);
+        break;
+      case 'month': periodStartDate = startOfMonth(purchaseDate); break;
+      case 'day': default: periodStartDate = new Date(purchaseDate.getFullYear(), purchaseDate.getMonth(), purchaseDate.getDate()); break;
+    }
+    const dateKey = format(periodStartDate, 'yyyy-MM-dd');
+
+    if (!aggregated[dateKey]) {
+      aggregated[dateKey] = { date: dateKey, revenueValue: 0, expenseValue: 0, profitValue: 0 };
+    }
+    aggregated[dateKey].expenseValue! += item.finalPurchaseValue;
+  });
+
+  // Calculate Profit and ensure all periods have all fields
+  for (const dateKey in aggregated) {
+    aggregated[dateKey].revenueValue = aggregated[dateKey].revenueValue || 0;
+    aggregated[dateKey].expenseValue = aggregated[dateKey].expenseValue || 0;
+    aggregated[dateKey].profitValue = parseFloat(
+      (aggregated[dateKey].revenueValue! - aggregated[dateKey].expenseValue!).toFixed(2)
+    );
+  }
+  
+  return Object.values(aggregated).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 };
 
 

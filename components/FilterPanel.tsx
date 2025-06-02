@@ -1,6 +1,8 @@
 
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { Filters, SaleItem, Theme, Season, ALL_SEASONS, MonthKey, ALL_MONTHS } from '../types';
+import { Filters, SaleItem, Theme, Season, ALL_SEASONS, MonthKey, ALL_MONTHS } from '../types.ts';
+
+type FilterSectionName = 'estacao' | 'mes' | 'ano' | 'tipoCliente' | 'produto' | 'sabor';
 
 interface FilterPanelProps {
   filters: Filters;
@@ -9,11 +11,12 @@ interface FilterPanelProps {
   uniqueClientTypes: string[];
   uniqueProductNames: string[];
   uniqueFlavors: string[];
-  allSalesData: SaleItem[]; // Kept for potential future use, though not directly used now
+  uniqueYears: string[]; // Added
+  allSalesData: SaleItem[]; 
   theme: Theme;
 }
 
-// Icons remain the same
+// Icons
 const FilterIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
@@ -38,6 +41,35 @@ const LeafIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     </svg>
 );
 
+const ClientIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
+        <path d="M10 9a3 3 0 100-6 3 3 0 000 6zM6 8a2 2 0 11-4 0 2 2 0 014 0zM1.49 15.326C1.477 14.031 2.482 13 3.774 13h5.452c1.292 0 2.297 1.031 2.284 2.326A8.003 8.003 0 0110 16c-1.32 0-2.555-.34-3.635-.935Q6.944 16 8 17c-2.273 0-3.893-1.08-4.51-2.674zM16 8a2 2 0 11-4 0 2 2 0 014 0zm-3.49 5.326c-.013 1.295.992 2.326 2.284 2.326h.002a8.003 8.003 0 011.706-.935C17.056 16 16 17 13.727 17c-1.627 0-3.247-1.08-3.862-2.674A4.523 4.523 0 0112.51 13h.002c1.292 0 2.297 1.031 2.284 2.326z" />
+    </svg>
+);
+const ProductIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
+        <path fillRule="evenodd" d="M6.672 1.902A.75.75 0 006.25 2.5v1.5H5.25a.75.75 0 000 1.5h.002v.002a3.002 3.002 0 005.494 2.004h.508a3.002 3.002 0 005.494-2.004V5.5h.002a.75.75 0 000-1.5H15.5v-1.5a.75.75 0 00-1.172-.648L13.5 2.19l-.828-.736A.75.75 0 0011.5 2.19l-.828.736-1.144-1.016zM4.5 7.5A.75.75 0 005.25 8h9.5a.75.75 0 000-1.5h-9.5A.75.75 0 004.5 7.5zm0 3A.75.75 0 005.25 11h9.5a.75.75 0 000-1.5h-9.5A.75.75 0 004.5 10.5zm.75 2.25a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75z" clipRule="evenodd" />
+    </svg>
+);
+const FlavorIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" {...props}>
+        <path d="M5.25 12.232C6.114 11.493 7.26 11 8.5 11s2.386.493 3.25 1.232L12 11.75l-.75.482C10.386 12.97 9.24 13.46 8 13.46A4.462 4.462 0 014.502 11c.811-.652 1.888-1 3.004-1a3.014 3.014 0 012.03 4.787l.117.134-.476.306A1.959 1.959 0 008.5 16a1.958 1.958 0 00-1.673-1.002L10.5 5.5l-5.25 6.732z" />
+        <path d="M12.25 12.232C13.114 11.493 14.26 11 15.5 11s2.386.493 3.25 1.232L19 11.75l-.75.482C17.386 12.97 16.24 13.46 15 13.46a4.462 4.462 0 01-3.498-2.46c.811-.652 1.888-1 3.004-1a3.014 3.014 0 012.03 4.787l.117.134-.476.306A1.959 1.959 0 0015.5 16a1.958 1.958 0 00-1.673-1.002L17.5 5.5l-5.25 6.732z" />
+    </svg>
+);
+
+const ChevronDownIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+  </svg>
+);
+
+const ChevronRightIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+  </svg>
+);
+
 
 const FilterPanel: React.FC<FilterPanelProps> = ({
   filters,
@@ -46,16 +78,29 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   uniqueClientTypes,
   uniqueProductNames,
   uniqueFlavors,
+  uniqueYears,
   theme,
 }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [openSections, setOpenSections] = useState<Record<FilterSectionName, boolean>>({
+    estacao: false,
+    mes: false,
+    ano: false,
+    tipoCliente: false,
+    produto: true, // Open by default IF showAdvanced is true
+    sabor: false,
+  });
+
+  const toggleSection = (sectionName: FilterSectionName) => {
+    setOpenSections(prev => ({ ...prev, [sectionName]: !prev[sectionName] }));
+  };
 
   const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilters(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleMultiSelectChange = (
-    field: 'clientTypes' | 'productNames' | 'flavors',
+    field: 'clientTypes' | 'productNames' | 'flavors' | 'years',
     value: string
   ) => {
     setFilters(prev => {
@@ -93,25 +138,58 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   const commonInputClasses = `${baseInputClasses} ${theme === 'dark' ? darkInputClasses : lightInputClasses}`;
 
   const baseCheckboxClasses = "form-checkbox h-5 w-5 text-blue-500 rounded focus:ring-blue-500 transition duration-150 ease-in-out";
-  const darkCheckboxClasses = "bg-gray-700 border-gray-600 focus:ring-offset-gray-800"; // Parent is gray-800
-  const lightCheckboxClasses = "bg-gray-100 border-gray-300 focus:ring-offset-white"; // Parent is white
+  const darkCheckboxClasses = "bg-gray-700 border-gray-600 focus:ring-offset-gray-800";
+  const lightCheckboxClasses = "bg-gray-100 border-gray-300 focus:ring-offset-white";
   const commonCheckboxClasses = `${baseCheckboxClasses} ${theme === 'dark' ? darkCheckboxClasses : lightCheckboxClasses}`;
   
   const commonLabelClasses = `ml-2 text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`;
-  const legendTextClasses = theme === 'dark' ? 'text-gray-200' : 'text-gray-700';
   const subLabelTextClasses = theme === 'dark' ? 'text-gray-400' : 'text-gray-500';
   
-  const hoverBgClasses = theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'; // Adjusted for new parent bg
-  const sectionGridClasses = "grid grid-cols-2 sm:grid-cols-2 gap-x-4 gap-y-2 pr-2 rounded"; // For seasons and months (sm:grid-cols-2 fits better)
-
-  // Scrollbar classes for list sections - applied by parent if needed
+  const hoverBgClasses = theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50';
+  const sectionGridClasses = "grid grid-cols-2 gap-x-3 gap-y-1.5"; // For seasons, months, years, products, flavors
   const scrollableListClasses = `max-h-32 overflow-y-auto pr-2 rounded scrollbar-thin ${theme === 'dark' ? 'dark-scrollbar' : 'light-scrollbar'}`;
-  const scrollableListTallClasses = `max-h-40 overflow-y-auto pr-2 rounded scrollbar-thin ${theme === 'dark' ? 'dark-scrollbar' : 'light-scrollbar'}`;
-  const scrollableMonthListClasses = `max-h-48 overflow-y-auto pr-2 rounded scrollbar-thin ${theme === 'dark' ? 'dark-scrollbar' : 'light-scrollbar'}`;
+  const scrollableMonthYearListClasses = `max-h-40 overflow-y-auto pr-2 rounded scrollbar-thin ${theme === 'dark' ? 'dark-scrollbar' : 'light-scrollbar'}`;
+
+
+  const AccordionItem: React.FC<{
+    title: string;
+    sectionKey: FilterSectionName;
+    icon: React.ReactNode;
+    children: React.ReactNode;
+    defaultOpen?: boolean;
+  }> = ({ title, sectionKey, icon: SectionIcon, children }) => {
+    const isOpen = openSections[sectionKey];
+    const headerHoverBg = theme === 'dark' ? 'hover:bg-gray-750' : 'hover:bg-gray-100';
+    const legendTextClasses = theme === 'dark' ? 'text-gray-200' : 'text-gray-700';
+
+    return (
+      <div>
+        <button
+          type="button"
+          onClick={() => toggleSection(sectionKey)}
+          className={`w-full flex items-center justify-between py-2 px-1 text-left font-medium ${legendTextClasses} ${headerHoverBg} rounded-md transition-colors duration-150`}
+          aria-expanded={isOpen}
+          aria-controls={`section-content-${sectionKey}`}
+        >
+          <span className="flex items-center">
+            <span className={`mr-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{SectionIcon}</span>
+            {title}
+          </span>
+          {isOpen ? <ChevronDownIcon className="h-5 w-5" /> : <ChevronRightIcon className="h-5 w-5" />}
+        </button>
+        {isOpen && (
+          <div id={`section-content-${sectionKey}`} className="pt-2 pb-1 pl-1 pr-1">
+            {children}
+          </div>
+        )}
+      </div>
+    );
+  };
+
 
   return (
-    <div> {/* Removed outer styling div, parent in DashboardLayout handles it */}
-      <div className="flex items-center justify-between mb-4">
+    <div>
+      <div className="flex items-center justify-between mb-3">
         <h3 className="text-xl font-semibold text-blue-500 dark:text-blue-400 flex items-center">
           <FilterIcon className="h-6 w-6 mr-2 text-blue-500 dark:text-blue-400" />
           Filtros
@@ -124,159 +202,123 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
         </button>
       </div>
 
-      <form onSubmit={(e: FormEvent) => e.preventDefault()}>
-        <div className="space-y-6">
-          {/* Date Filters */}
-          <fieldset>
-            <legend className={`text-md font-medium ${legendTextClasses} mb-1 flex items-center`}>
+      <form onSubmit={(e: FormEvent) => e.preventDefault()} className="space-y-3">
+          {/* Date Filters - Always Visible */}
+          <fieldset className="border-t pt-3 mt-3 first:border-t-0 first:mt-0 first:pt-0">
+            <legend className={`text-md font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'} mb-2 flex items-center`}>
               <CalendarDaysIcon className={`h-5 w-5 mr-1.5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}/>
               Período
             </legend>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label htmlFor="startDate" className={`block text-sm font-medium ${subLabelTextClasses} mb-1`}>De:</label>
+                <label htmlFor="startDate" className={`block text-xs font-medium ${subLabelTextClasses} mb-0.5`}>De:</label>
                 <input
                   type="date"
                   id="startDate"
                   name="startDate"
                   value={filters.startDate || ''}
                   onChange={handleDateChange}
-                  className={commonInputClasses}
+                  className={commonInputClasses + " text-sm"}
                   style={{ colorScheme: theme === 'dark' ? 'dark' : 'light' }}
                 />
               </div>
               <div>
-                <label htmlFor="endDate" className={`block text-sm font-medium ${subLabelTextClasses} mb-1`}>Até:</label>
+                <label htmlFor="endDate" className={`block text-xs font-medium ${subLabelTextClasses} mb-0.5`}>Até:</label>
                 <input
                   type="date"
                   id="endDate"
                   name="endDate"
                   value={filters.endDate || ''}
                   onChange={handleDateChange}
-                  className={commonInputClasses}
+                  className={commonInputClasses + " text-sm"}
                   style={{ colorScheme: theme === 'dark' ? 'dark' : 'light' }}
                 />
               </div>
             </div>
           </fieldset>
 
-          {/* Seasons Filter */}
-          <div>
-            <label className={`block text-md font-medium ${legendTextClasses} mb-2 flex items-center`}>
-              <LeafIcon className={`h-5 w-5 mr-1.5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}/>
-              Estação do Ano
-            </label>
-            <div className={sectionGridClasses}>
+          <AccordionItem title="Estação do Ano" sectionKey="estacao" icon={<LeafIcon className="h-5 w-5"/>}>
+            <div className={`${sectionGridClasses} ${scrollableListClasses}`}>
               {ALL_SEASONS.map(season => (
                 <label key={season} className={`flex items-center cursor-pointer ${hoverBgClasses} p-1 rounded`}>
-                  <input
-                    type="checkbox"
-                    className={commonCheckboxClasses}
-                    checked={filters.seasons.includes(season)}
-                    onChange={() => handleSeasonChange(season)}
-                    aria-label={season}
-                  />
+                  <input type="checkbox" className={commonCheckboxClasses} checked={filters.seasons.includes(season)} onChange={() => handleSeasonChange(season)} aria-label={season}/>
                   <span className={commonLabelClasses}>{season}</span>
                 </label>
               ))}
             </div>
-          </div>
-          
-          {/* Months Filter */}
-          <div>
-            <label className={`block text-md font-medium ${legendTextClasses} mb-2 flex items-center`}>
-              <CalendarDaysIcon className={`h-5 w-5 mr-1.5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}/>
-              Mês do Ano
-            </label>
-            <div className={`${sectionGridClasses} ${scrollableMonthListClasses}`}>
+          </AccordionItem>
+
+          <AccordionItem title="Mês do Ano" sectionKey="mes" icon={<CalendarDaysIcon className="h-5 w-5"/>}>
+            <div className={`${sectionGridClasses} ${scrollableMonthYearListClasses}`}>
               {ALL_MONTHS.map(month => (
                 <label key={month.key} className={`flex items-center cursor-pointer ${hoverBgClasses} p-1 rounded`}>
-                  <input
-                    type="checkbox"
-                    className={commonCheckboxClasses}
-                    checked={filters.months.includes(month.key)}
-                    onChange={() => handleMonthChange(month.key)}
-                    aria-label={month.name}
-                  />
+                  <input type="checkbox" className={commonCheckboxClasses} checked={filters.months.includes(month.key)} onChange={() => handleMonthChange(month.key)} aria-label={month.name}/>
                   <span className={commonLabelClasses}>{month.name}</span>
                 </label>
               ))}
             </div>
-          </div>
+          </AccordionItem>
+          
+          <AccordionItem title="Ano" sectionKey="ano" icon={<CalendarDaysIcon className="h-5 w-5"/>}>
+            <div className={`${sectionGridClasses} ${scrollableMonthYearListClasses}`}>
+              {uniqueYears.map(year => (
+                <label key={year} className={`flex items-center cursor-pointer ${hoverBgClasses} p-1 rounded`}>
+                  <input type="checkbox" className={commonCheckboxClasses} checked={filters.years.includes(year)} onChange={() => handleMultiSelectChange('years', year)} aria-label={year}/>
+                  <span className={commonLabelClasses}>{year}</span>
+                </label>
+              ))}
+            </div>
+          </AccordionItem>
 
-
-          {/* Client Type Filter (Checkboxes) */}
-           <div>
-            <label className={`block text-md font-medium ${legendTextClasses} mb-2 flex items-center`}>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`h-5 w-5 mr-1.5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                <path d="M10 9a3 3 0 100-6 3 3 0 000 6zM6 8a2 2 0 11-4 0 2 2 0 014 0zM1.49 15.326C1.477 14.031 2.482 13 3.774 13h5.452c1.292 0 2.297 1.031 2.284 2.326A8.003 8.003 0 0110 16c-1.32 0-2.555-.34-3.635-.935Q6.944 16 8 17c-2.273 0-3.893-1.08-4.51-2.674zM16 8a2 2 0 11-4 0 2 2 0 014 0zm-3.49 5.326c-.013 1.295.992 2.326 2.284 2.326h.002a8.003 8.003 0 011.706-.935C17.056 16 16 17 13.727 17c-1.627 0-3.247-1.08-3.862-2.674A4.523 4.523 0 0112.51 13h.002c1.292 0 2.297 1.031 2.284 2.326z" />
-              </svg>
-              Tipo de Cliente
-            </label>
-            <div className={`space-y-2 ${scrollableListClasses}`}>
+          <AccordionItem title="Tipo de Cliente" sectionKey="tipoCliente" icon={<ClientIcon className="h-5 w-5"/>}>
+            <div className={`${scrollableListClasses} space-y-1.5`}>
               {uniqueClientTypes.map(type => (
                 <label key={type} className={`flex items-center cursor-pointer ${hoverBgClasses} p-1 rounded`}>
-                  <input
-                    type="checkbox"
-                    className={commonCheckboxClasses}
-                    checked={filters.clientTypes.includes(type)}
-                    onChange={() => handleMultiSelectChange('clientTypes', type)}
-                  />
+                  <input type="checkbox" className={commonCheckboxClasses} checked={filters.clientTypes.includes(type)} onChange={() => handleMultiSelectChange('clientTypes', type)}/>
                   <span className={commonLabelClasses}>{type}</span>
                 </label>
               ))}
             </div>
-          </div>
+          </AccordionItem>
 
-          {/* Advanced Filters Section */}
           {showAdvanced && (
             <>
-              {/* Product Name Filter (Checkboxes) */}
-              <div>
-                <label className={`block text-md font-medium ${legendTextClasses} mb-2 flex items-center`}>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`h-5 w-5 mr-1.5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                    <path fillRule="evenodd" d="M6.672 1.902A.75.75 0 006.25 2.5v1.5H5.25a.75.75 0 000 1.5h.002v.002a3.002 3.002 0 005.494 2.004h.508a3.002 3.002 0 005.494-2.004V5.5h.002a.75.75 0 000-1.5H15.5v-1.5a.75.75 0 00-1.172-.648L13.5 2.19l-.828-.736A.75.75 0 0011.5 2.19l-.828.736-1.144-1.016zM4.5 7.5A.75.75 0 005.25 8h9.5a.75.75 0 000-1.5h-9.5A.75.75 0 004.5 7.5zm0 3A.75.75 0 005.25 11h9.5a.75.75 0 000-1.5h-9.5A.75.75 0 004.5 10.5zm.75 2.25a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75z" clipRule="evenodd" />
-                  </svg>
-                  Produto
-                </label>
-                <div className={`space-y-2 ${scrollableListTallClasses}`}>
-                  {uniqueProductNames.map(name => (
-                    <label key={name} className={`flex items-center cursor-pointer ${hoverBgClasses} p-1 rounded`}>
-                      <input
-                        type="checkbox"
-                        className={commonCheckboxClasses}
-                        checked={filters.productNames.includes(name)}
-                        onChange={() => handleMultiSelectChange('productNames', name)}
-                      />
-                      <span className={commonLabelClasses}>{name}</span>
-                    </label>
-                  ))}
-                </div>
+              {/* Produto - always open if showAdvanced is true */}
+              <div className="border-t pt-3 mt-3">
+                 <button
+                    type="button"
+                    onClick={() => toggleSection('produto')}
+                    className={`w-full flex items-center justify-between py-2 px-1 text-left font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'} ${theme === 'dark' ? 'hover:bg-gray-750' : 'hover:bg-gray-100'} rounded-md transition-colors duration-150`}
+                    aria-expanded={openSections['produto']}
+                 >
+                    <span className="flex items-center">
+                        <ProductIcon className={`h-5 w-5 mr-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}/>
+                        Produto
+                    </span>
+                    {openSections['produto'] ? <ChevronDownIcon className="h-5 w-5" /> : <ChevronRightIcon className="h-5 w-5" />}
+                </button>
+                {openSections['produto'] && (
+                    <div className={`pt-2 pb-1 pl-1 pr-1 ${sectionGridClasses} ${scrollableListClasses} max-h-40`}>
+                      {uniqueProductNames.map(name => (
+                        <label key={name} className={`flex items-center cursor-pointer ${hoverBgClasses} p-1 rounded`}>
+                          <input type="checkbox" className={commonCheckboxClasses} checked={filters.productNames.includes(name)} onChange={() => handleMultiSelectChange('productNames', name)}/>
+                          <span className={commonLabelClasses}>{name}</span>
+                        </label>
+                      ))}
+                    </div>
+                )}
               </div>
 
-              {/* Flavor Filter (Checkboxes) */}
-              <div>
-                <label className={`block text-md font-medium ${legendTextClasses} mb-2 flex items-center`}>
-                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`h-5 w-5 mr-1.5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                    <path d="M5.25 12.232C6.114 11.493 7.26 11 8.5 11s2.386.493 3.25 1.232L12 11.75l-.75.482C10.386 12.97 9.24 13.46 8 13.46A4.462 4.462 0 014.502 11c.811-.652 1.888-1 3.004-1a3.014 3.014 0 012.03 4.787l.117.134-.476.306A1.959 1.959 0 008.5 16a1.958 1.958 0 00-1.673-1.002L10.5 5.5l-5.25 6.732z" />
-                    <path d="M12.25 12.232C13.114 11.493 14.26 11 15.5 11s2.386.493 3.25 1.232L19 11.75l-.75.482C17.386 12.97 16.24 13.46 15 13.46a4.462 4.462 0 01-3.498-2.46c.811-.652 1.888-1 3.004-1a3.014 3.014 0 012.03 4.787l.117.134-.476.306A1.959 1.959 0 0015.5 16a1.958 1.958 0 00-1.673-1.002L17.5 5.5l-5.25 6.732z" />
-                 </svg>
-                  Sabor
-                </label>
-                <div className={`space-y-2 ${scrollableListTallClasses}`}>
+              <AccordionItem title="Sabor" sectionKey="sabor" icon={<FlavorIcon className="h-5 w-5"/>}>
+                <div className={`${sectionGridClasses} ${scrollableListClasses} max-h-40`}>
                   {uniqueFlavors.map(flavor => (
                     <label key={flavor} className={`flex items-center cursor-pointer ${hoverBgClasses} p-1 rounded`}>
-                      <input
-                        type="checkbox"
-                        className={commonCheckboxClasses}
-                        checked={filters.flavors.includes(flavor)}
-                        onChange={() => handleMultiSelectChange('flavors', flavor)}
-                      />
+                      <input type="checkbox" className={commonCheckboxClasses} checked={filters.flavors.includes(flavor)} onChange={() => handleMultiSelectChange('flavors', flavor)}/>
                       <span className={commonLabelClasses}>{flavor}</span>
                     </label>
                   ))}
                 </div>
-              </div>
+              </AccordionItem>
             </>
           )}
 
@@ -288,7 +330,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             <TrashIcon className="h-4 w-4 mr-2"/>
             Limpar Filtros
           </button>
-        </div>
+        
       </form>
     </div>
   );
