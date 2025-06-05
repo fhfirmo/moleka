@@ -139,9 +139,17 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           />
           {revenueByClient.map((client) => {
             let clientIcon: React.ReactNode = <UsersIcon />; 
-            const clientNameLower = client.name.toLowerCase();
+            const clientNameActual = client.name;
+            const clientNameLower = clientNameActual.toLowerCase();
+            
+            let displayTitle = `Receita: ${clientNameActual}`;
+            let displayDescription = clientNameActual !== "Outros" ? `Tipo: ${clientNameActual}` : "Demais Clientes";
 
-            if (clientNameLower.includes('atacado')) {
+            if (clientNameActual === "Outros") {
+              displayTitle = "Receita: iFood";
+              displayDescription = "Tipo: iFood";
+              clientIcon = <TruckIcon />;
+            } else if (clientNameLower.includes('atacado')) {
               clientIcon = <PackageIcon />;
             } else if (clientNameLower.includes('ifood') || clientNameLower.includes('delivery')) {
               clientIcon = <TruckIcon />;
@@ -151,12 +159,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             
             return (
               <KPICard
-                key={client.name}
+                key={clientNameActual} // Use original name for key stability
                 theme={theme}
-                title={`Receita: ${client.name}`}
+                title={displayTitle}
                 value={`R$ ${client.value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                 icon={clientIcon}
-                description={client.name !== "Outros" ? `Tipo: ${client.name}` : "Demais Clientes"}
+                description={displayDescription}
                 valueColorClass={theme === 'dark' ? "text-blue-400" : "text-blue-600"}
               />
             );
@@ -218,7 +226,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
           {/* O card "Distribuição por Tipo de Cliente (Receita)" foi removido daqui */}
 
-          <ChartCard title="Top 10 Produtos (por Margem Líquida)" className="md:col-span-2" theme={theme}>
+          <ChartCard title="Margem Líquida por Produto" className="md:col-span-2" theme={theme}>
             <MarginByItemChart 
               data={filteredData} 
               itemKey="productName" 
